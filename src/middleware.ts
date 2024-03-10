@@ -23,7 +23,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if(nextUrl.pathname === "/dashboard"){
-    return NextResponse.redirect(new URL("/dashboard/tool/yt-video-to-linkedin-post-gen", req.url));
+    return NextResponse.rewrite(new URL("/dashboard/tool/yt-video-to-linkedin-post-gen", req.url));
   }
 
   if (!session) {

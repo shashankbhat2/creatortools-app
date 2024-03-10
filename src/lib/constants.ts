@@ -35,27 +35,27 @@ export const toolInfo = [
 
 export const reactionIcons = [
   {
-    icon: "/assets/like.png",
+    icon: "/assets/Like.png",
     alt: "like",
   },
   {
-    icon: "/assets/clap.png",
+    icon: "/assets/Clap.png",
     alt: "clap",
   },
   {
-    icon: "/assets/love.png",
+    icon: "/assets/Love.png",
     alt: "love",
   },
   {
-    icon: "/assets/idea.png",
+    icon: "/assets/Idea.png",
     alt: "idea",
   },
   {
-    icon: "/assets/think.png",
+    icon: "/assets/Think.png",
     alt: "think",
   },
   {
-    icon: "/assets/give.png",
+    icon: "/assets/Give.png",
     alt: "give",
   },
 ];

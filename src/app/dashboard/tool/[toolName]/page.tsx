@@ -8,11 +8,6 @@ import { PlusCircle } from "lucide-react";
 
 async function ToolListPage({ params }: { params: { toolName: string } }) {
   const toolName = params.toolName;
-  const supabase = createClient();
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
-    redirect("/login");
-  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -28,7 +23,7 @@ async function ToolListPage({ params }: { params: { toolName: string } }) {
         </Button>
         <LogoutButton />
       </div>
-      <PostList creatorId={data.user.id} toolName={toolName} />
+      <PostList toolName={toolName} />
     </div>
   );
 }

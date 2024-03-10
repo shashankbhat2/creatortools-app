@@ -10,7 +10,6 @@ export const getPosts = cache(async (creatorId: string, toolName: string) => {
     .eq("toolName", toolName)
     .eq("creatorId", creatorId);
   if (error) throw error;
-  console.log(posts);
   return posts;
 });
 

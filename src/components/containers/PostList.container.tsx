@@ -3,26 +3,40 @@ import React, { useEffect } from "react";
 import { getPosts } from "~/lib/data";
 import { Card } from "../ui/card";
 import { SAMPLE_POSTS } from "~/lib/constants";
+import { createClient } from "~/lib/supabase/client";
 
 type Props = {
-  creatorId: string;
   toolName: string;
 };
 
-const PostList = ({ creatorId, toolName }: Props) => {
+const PostList = ({ toolName }: Props) => {
   const [posts, setPosts] = React.useState<any[]>([]);
+  const [creatorId, setCreatorId] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error("Error getting current user", error);
+        return;
+      }
+      setCreatorId(data?.user.id);
+    };
+    getCurrentUser();
+  }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await getPosts(creatorId, toolName);
+      const res = await getPosts(creatorId!, toolName);
       const parsedPosts = res.map((post: any) => ({
         ...post,
         content: JSON.parse(post.content),
       }));
       setPosts(parsedPosts);
     };
-    fetchPosts();
-  }, []);
+    if (creatorId) fetchPosts();
+  }, [creatorId]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -30,12 +44,20 @@ const PostList = ({ creatorId, toolName }: Props) => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {posts.length !== 0
           ? posts.map((post) => (
-              <Card key={post.id} className="rounded-md bg-white p-4 gap-4 flex flex-col shadow-md">
-                <h1 className="text-base font-medium">{post.content.content}</h1>
+              <Card
+                key={post.id}
+                className="flex flex-col gap-4 rounded-md bg-white p-4 shadow-md"
+              >
+                <h1 className="text-base font-medium">
+                  {post.content.content}
+                </h1>
                 <p className="flex flex-wrap gap-1 text-wrap">
                   {post.content.hashtags &&
                     post.content.hashtags.map((tag: string) => (
-                      <span key={tag} className="font-bold text-xs text-[#0966C2]">
+                      <span
+                        key={tag}
+                        className="text-xs font-bold text-[#0966C2]"
+                      >
                         #{tag}
                       </span>
                     ))}

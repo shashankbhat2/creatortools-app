@@ -1,15 +1,10 @@
 import { NextRequest } from "next/server";
-import { env } from "~/env";
-import { createClient } from "@deepgram/sdk";
 import ytdl from "ytdl-core";
 import { z } from "zod";
 import fs from "fs";
 import path from "path";
 import { getTranscriptSummary } from "~/lib/deepgram";
 import { getLinkedinPostFromVideoSummary } from "~/lib/openai";
-
-const deepgramApiKey = env.DEEPGRAM_API_KEY as string;
-const deepgram = createClient(deepgramApiKey);
 
 const subtitleRequestSchema = z.object({
   youtubeUrl: z.string().url(),
@@ -24,9 +19,14 @@ export async function POST(req: NextRequest) {
   try {
     const videoId = ytdl.getURLVideoID(youtubeUrl);
     const videoStream = ytdl(youtubeUrl, { filter: "audioandvideo" });
-    filePath = path.resolve("./public", `${videoId}.mp4`);
+    filePath = path.join(process.cwd(), 'public', `${videoId}.mp4`);
+    const publicDir = path.join(process.cwd(), 'public');
+    if (!fs.existsSync(publicDir)) {
+        fs.mkdirSync(publicDir);
+    }
+    
     const fileWriteStream = fs.createWriteStream(filePath);
-
+    
     await new Promise((resolve, reject) => {
       videoStream.pipe(fileWriteStream);
       videoStream.on("error", reject);
