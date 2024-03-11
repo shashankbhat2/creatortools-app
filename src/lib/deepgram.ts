@@ -6,7 +6,7 @@ const deepgramApiKey = env.DEEPGRAM_API_KEY as string;
 const deepgram = createClient(deepgramApiKey);
 
 interface TranscriptSummaryProps {
-  filePath: string;
+  url: string;
 }
 
 interface TranscriptSummaryResult {
@@ -14,7 +14,7 @@ interface TranscriptSummaryResult {
 }
 
 export const getTranscriptSummary = async ({
-  filePath,
+  url,
 }: TranscriptSummaryProps): Promise<TranscriptSummaryResult> => {
   try {
     const options = {
@@ -24,8 +24,10 @@ export const getTranscriptSummary = async ({
       smart_format: true,
     };
 
-    const result = await deepgram.listen.prerecorded.transcribeFile(
-      fs.readFileSync(filePath),
+    const result = await deepgram.listen.prerecorded.transcribeUrl(
+      {
+        url
+      },
       options,
     );
 

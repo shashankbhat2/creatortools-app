@@ -6,12 +6,12 @@ const client = new OpenAI({
   apiKey: openaiApiKey,
 });
 
-interface LinkedinPost {
+export type LinkedinPost = {
   content: string;
   tags: Array<string>;
 }
 
-interface YoutubeToLinkedinPostResponse {
+export type YoutubeToLinkedinPostResponse = {
   posts: Array<LinkedinPost>;
 }
 

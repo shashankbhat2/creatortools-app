@@ -1,10 +1,13 @@
 import { NextRequest } from "next/server";
 import ytdl from "ytdl-core";
 import { z } from "zod";
-import fs from "fs";
-import path from "path";
 import { getTranscriptSummary } from "~/lib/deepgram";
-import { getLinkedinPostFromVideoSummary } from "~/lib/openai";
+import {
+  YoutubeToLinkedinPostResponse,
+  getLinkedinPostFromVideoSummary,
+} from "~/lib/openai";
+import { createClient } from "~/lib/supabase/server";
+import { v4 as uuidv4 } from "uuid";
 
 const subtitleRequestSchema = z.object({
   youtubeUrl: z.string().url(),
@@ -15,25 +18,31 @@ export async function POST(req: NextRequest) {
   const json = await req.json();
   const body = subtitleRequestSchema.parse(json);
   const { youtubeUrl, tone } = body;
-  let filePath: string = "";
+  const supabase = createClient();
+  let posts: YoutubeToLinkedinPostResponse | [] = [];
   try {
-    const videoId = ytdl.getURLVideoID(youtubeUrl);
-    const videoStream = ytdl(youtubeUrl, { filter: "audioandvideo" });
-    filePath = path.join(process.cwd(), 'public', `${videoId}.mp4`);
-    const publicDir = path.join(process.cwd(), 'public');
-    if (!fs.existsSync(publicDir)) {
-        fs.mkdirSync(publicDir);
-    }
-    
-    const fileWriteStream = fs.createWriteStream(filePath);
-    
-    await new Promise((resolve, reject) => {
-      videoStream.pipe(fileWriteStream);
-      videoStream.on("error", reject);
-      fileWriteStream.on("finish", resolve);
-    });
+    const fileName = `audio/${uuidv4()}.mp3`;
+    const stream = ytdl(youtubeUrl, { filter: "audioonly" });
+    const { error: uploadError } = await supabase.storage
+      .from("audio")
+      .upload(fileName, stream, {
+        contentType: "audio/mp3",
+        duplex: "half",
+      });
 
-    const videoSummary = await getTranscriptSummary({ filePath });
+    if (uploadError) {
+      console.log(uploadError);
+      return new Response(
+        JSON.stringify({ message: "Error uploading audio" }),
+        { status: 500 },
+      );
+    }
+
+    const {
+      data: { publicUrl: url },
+    } = await supabase.storage.from("audio").getPublicUrl(fileName);
+
+    const videoSummary = await getTranscriptSummary({ url });
     if (!videoSummary.summary) {
       return new Response(
         JSON.stringify({ message: "Error getting video summary" }),
@@ -41,14 +50,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const posts = await getLinkedinPostFromVideoSummary(
-      videoSummary.summary,
-      tone,
-    );
+    posts = await getLinkedinPostFromVideoSummary(videoSummary.summary, tone);
 
     return new Response(
       JSON.stringify({
-        message: "Video Download Complete",
+        message: "Successfully Generated Posts",
         posts,
       }),
       { status: 200 },
@@ -56,14 +62,8 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.log(error);
     return new Response(
-      JSON.stringify({ message: "Video Download Complete" }),
+      JSON.stringify({ message: "Failed to Generate Posts", posts: [] }),
       { status: 500 },
     );
-  } finally {
-    try {
-      fs.unlinkSync(filePath);
-    } catch (err) {
-      console.error("Error deleting the file:", err);
-    }
   }
 }

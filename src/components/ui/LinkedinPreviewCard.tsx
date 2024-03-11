@@ -1,7 +1,10 @@
 import React from "react";
 import { Card, CardContent, CardFooter } from "./card";
-import { Ellipsis, Globe2 } from "lucide-react";
+import { Copy, Ellipsis, Globe2 } from "lucide-react";
 import { placeHolderContent, reactionIcons } from "~/lib/constants";
+import CopyToClipboard from "react-copy-to-clipboard";
+import { toast } from "sonner";
+import { Button } from "./button";
 
 type LinkedinPreviewCardProps = {
   content: string;
@@ -22,7 +25,18 @@ const LinkedinPreviewCard = ({
   const hashtags = tags.length > 0 ? tags : placeHolderContent.hashtags;
 
   return (
-    <Card className="mb-2 flex h-full w-full flex-col gap-5 overflow-hidden p-4">
+    <Card className="mb-2 flex h-full w-full relative flex-col gap-5 overflow-hidden p-4">
+      <CopyToClipboard text={`${content} ${hashtags.toString()}`}>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            toast.success("Copied Post to clipboard");
+          }}
+          className="absolute bottom-0 right-0 m-1 p-3 text-xs font-bold "
+        >
+          <Copy size={16} className="text-[#0966C2]" />
+        </Button>
+      </CopyToClipboard>
       <div className="flex w-full justify-between">
         <div className="flex gap-2">
           <img className="w-[60px]" src="/assets/fake_dp.png" alt="fake-dp" />

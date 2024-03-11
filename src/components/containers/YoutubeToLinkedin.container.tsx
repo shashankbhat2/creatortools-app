@@ -77,12 +77,12 @@ const YoutubeToLinkedinContainer = () => {
           </Link>
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="text-wrap text-4xl font-bold leading-tight tracking-tight md:w-1/2">
+          <h1 className="text-wrap text-4xl font-bold leading-tight tracking-tight md:w-3/4 lg:w-1/2">
             YouTube video to LinkedIn Post Generator
           </h1>
           <p>Generate 3 unique posts for for your next viral video.</p>
         </div>
-        <div className="flex flex-col gap-2 md:w-1/2">
+        <div className="flex flex-col gap-2 md:w-3/4 lg:w-1/2">
           <YoutubeToLinkedinPostForm
             isLoading={loading}
             onSubmit={handleSubmit}

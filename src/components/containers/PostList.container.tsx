@@ -4,6 +4,10 @@ import { getPosts } from "~/lib/data";
 import { Card } from "../ui/card";
 import { SAMPLE_POSTS } from "~/lib/constants";
 import { createClient } from "~/lib/supabase/client";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { Copy } from "lucide-react";
+import { Button } from "../ui/button";
+import { toast } from "sonner";
 
 type Props = {
   toolName: string;
@@ -46,8 +50,22 @@ const PostList = ({ toolName }: Props) => {
           ? posts.map((post) => (
               <Card
                 key={post.id}
-                className="flex flex-col gap-4 rounded-md bg-white p-4 shadow-md"
+                className="relative flex flex-col gap-4 rounded-md bg-white p-4 shadow-md"
               >
+                <CopyToClipboard
+                  text={`${post.content.content} ${post.content.hashtags.toString()}`}
+                >
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      toast.success("Copied Post to clipboard");
+                    }}
+                    className="absolute right-0 bottom-0 m-1 p-3 text-xs font-bold "
+                  >
+                    <Copy size={16} className="text-[#0966C2]" />
+                  </Button>
+                </CopyToClipboard>
+
                 <h1 className="text-base font-medium">
                   {post.content.content}
                 </h1>
