@@ -1,7 +1,7 @@
 import { ArrowDown, ChevronRight, Sparkle, User } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
+import SubscribtionBanner from "~/components/containers/SubscribtionBanner.container";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { toolInfo } from "~/lib/constants";
@@ -74,8 +74,9 @@ export default function HomePage() {
                 variant="secondary"
                 className="flex items-center justify-center rounded-sm border-2 border-[#A91245] bg-gradient-to-b from-[#FF81AC] to-[#FF3F80] font-medium text-white shadow-inner"
               >
-                <Link href="/login">Login and explore
-                <ChevronRight size="16px" />
+                <Link href="/login">
+                  Login and explore
+                  <ChevronRight size="16px" />
                 </Link>
               </Button>
               <div className="flex items-center gap-2">
@@ -115,23 +116,7 @@ export default function HomePage() {
             ))}
           </div>
         </section>
-        <div className="my-[50px] flex w-full flex-col items-start justify-between gap-5 rounded-md border bg-[#FFFAFB] p-[40px] md:flex-row md:items-center">
-          <div className="flex flex-col gap-2">
-            <p className="text-xl font-medium tracking-tighter text-black md:text-2xl lg:text-3xl">
-              Want to know more about the tools?
-            </p>
-            <p className="text-lg text-muted-foreground">
-              Join the club and explore all the free tools...
-            </p>
-          </div>
-          <Button
-            asChild
-            variant="secondary"
-            className="flex items-center justify-center rounded-sm border-2 border-[#A91245] bg-gradient-to-b from-[#FF81AC] to-[#FF3F80] font-medium text-white shadow-inner"
-          >
-            <Link href="/login">Subscribe</Link>
-          </Button>
-        </div>
+        <SubscribtionBanner />
       </main>
       <footer className="container mx-auto flex items-center justify-between bg-slate-50 p-4 text-sm">
         <p>© 1811 Labs. All rights reserved.</p>
