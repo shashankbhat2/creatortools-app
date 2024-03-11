@@ -1,18 +1,13 @@
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import { NextRequest, NextResponse } from "next/server";
 import { publicRoutes } from "./lib/routes";
+import { updateSession } from "./lib/supabase/middleware";
 
 export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
+  const { data: { session }} = await updateSession(req)
+  console.log(session)
   const res = NextResponse.next();
-  const supabase = createMiddlewareClient({
-    req,
-    res,
-  });
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
 
   if (isPublicRoute) {
