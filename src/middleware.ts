@@ -5,7 +5,6 @@ import { updateSession } from "./lib/supabase/middleware";
 export async function middleware(req: NextRequest) {
   const { nextUrl } = req;
   const { data: { session }} = await updateSession(req)
-  console.log(session)
   const res = NextResponse.next();
   
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);

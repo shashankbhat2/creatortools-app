@@ -66,6 +66,24 @@ export const placeHolderContent = {
   hashtags: ["panda", "pandafacts", "pandamedia"],
 };
 
+export const PLACEHOLDER_POSTS = [
+  {
+    content: `[Historical Fact] The West first learned of the giant panda on 11 March 1869, when the French missionary Armand David received a skin from a hunter.
+    In 1936, Ruth Harkness became the first Westerner to bring back a live giant panda.`,
+    hashtags: [],
+  },
+  {
+    content: `[Fascinating] Here are 10 facts about pandas: https://lnkd.in/pandamedia.
+    👉  They have great camouflage for their environment.
+    👉  Their eyes are different to normal bears.   `,
+    hashtags: ["panda", "fascinating", "panda"],
+  },
+  {
+    content: `[Fun facts] Did you know that red pandas were given the name 'panda' first, roughly fifty years before the black and white variety.`,
+    hashtags: ["panda", "funfact", "redpanda"],
+  },
+];
+
 export const SAMPLE_POSTS = [
   {
     icon: "🖼️",

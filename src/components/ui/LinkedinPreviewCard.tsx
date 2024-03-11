@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardFooter } from "./card";
 import { Copy, Ellipsis, Globe2 } from "lucide-react";
-import { placeHolderContent, reactionIcons } from "~/lib/constants";
+import { PLACEHOLDER_POSTS, placeHolderContent, reactionIcons } from "~/lib/constants";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { toast } from "sonner";
 import { Button } from "./button";
@@ -69,7 +69,7 @@ const LinkedinPreviewCard = ({
         </CardContent>
       )}
       <p className="text-sm font-bold text-[#0966C2]">See translation</p>
-      <CardFooter className="flex gap-2 p-0 text-xs text-muted-foreground">
+      <CardFooter className="flex gap-2 my-1 px-0 text-xs text-muted-foreground">
         <div className="flex gap-1">
           {reactionIcons.map((reaction, i) => (
             <img
@@ -101,14 +101,13 @@ const LinkedinPreviewList = ({
               tags={post.hashtags}
             />
           ))
-        : Array(3)
-            .fill(0)
-            .map((_, i) => (
+        : PLACEHOLDER_POSTS
+            .map((post, i) => (
               <LinkedinPreviewCard
                 key={i}
                 isLoading={isLoading}
-                content={placeHolderContent.content}
-                tags={placeHolderContent.hashtags}
+                content={post.content}
+                tags={post.hashtags}
               />
             ))}
     </div>
